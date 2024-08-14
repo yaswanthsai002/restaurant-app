@@ -7,18 +7,18 @@ import './index.css'
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [response, setResponse] = useState([])
+  const [apiResponse, setAPIResponse] = useState([])
   const [activeCategoryId, setActiveCategoryId] = useState('')
 
-  const [cartItems, setCartItems] = useState([])
+  const [cart, setCart] = useState([])
 
   const addItemToCart = dish => {
-    const isAlreadyExists = cartItems.find(item => item.dishId === dish.dishId)
+    const isAlreadyExists = cart.find(item => item.dishId === dish.dishId)
     if (!isAlreadyExists) {
       const newDish = {...dish, quantity: 1}
-      setCartItems(prev => [...prev, newDish])
+      setCart(prev => [...prev, newDish])
     } else {
-      setCartItems(prev =>
+      setCart(prev =>
         prev.map(item =>
           item.dishId === dish.dishId
             ? {...item, quantity: item.quantity + 1}
@@ -29,9 +29,9 @@ const Home = () => {
   }
 
   const removeItemFromCart = dish => {
-    const isAlreadyExists = cartItems.find(item => item.dishId === dish.dishId)
+    const isAlreadyExists = cart.find(item => item.dishId === dish.dishId)
     if (isAlreadyExists) {
-      setCartItems(prev =>
+      setCart(prev =>
         prev
           .map(item =>
             item.dishId === dish.dishId
@@ -65,10 +65,10 @@ const Home = () => {
   const fetchRestaurantApi = async () => {
     const api =
       'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details'
-    const apiResponse = await fetch(api)
-    const data = await apiResponse.json()
+    const response = await fetch(api)
+    const data = await response.json()
     const updatedData = getUpdatedData(data[0].table_menu_list)
-    setResponse(updatedData)
+    setAPIResponse(updatedData)
     setActiveCategoryId(updatedData[0].menuCategoryId)
     setIsLoading(false)
   }
@@ -81,7 +81,7 @@ const Home = () => {
     setActiveCategoryId(menuCategoryId)
 
   const renderTabMenuList = () =>
-    response.map(eachCategory => {
+    apiResponse.map(eachCategory => {
       const onClickHandler = () =>
         onUpdateActiveCategoryIdx(eachCategory.menuCategoryId)
 
@@ -103,7 +103,7 @@ const Home = () => {
     })
 
   const renderDishes = () => {
-    const {categoryDishes} = response.find(
+    const {categoryDishes} = apiResponse.find(
       eachCategory => eachCategory.menuCategoryId === activeCategoryId,
     )
 
@@ -113,7 +113,7 @@ const Home = () => {
           <DishItem
             key={eachDish.dishId}
             dishDetails={eachDish}
-            cartItems={cartItems}
+            cart={cart}
             addItemToCart={addItemToCart}
             removeItemFromCart={removeItemFromCart}
           />
@@ -132,7 +132,7 @@ const Home = () => {
     renderSpinner()
   ) : (
     <div className="home-background">
-      <Header cartItems={cartItems} />
+      <Header cart={cart} />
       <ul className="category-container">{renderTabMenuList()}</ul>
       {renderDishes()}
     </div>

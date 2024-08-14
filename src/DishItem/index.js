@@ -1,11 +1,6 @@
 import './index.css'
 
-const DishItem = ({
-  dishDetails,
-  cartItems,
-  addItemToCart,
-  removeItemFromCart,
-}) => {
+const DishItem = ({dishDetails, cart, addItemToCart, removeItemFromCart}) => {
   const {
     dishId,
     dishName,
@@ -23,7 +18,7 @@ const DishItem = ({
   const onDecreaseQuantity = () => removeItemFromCart(dishDetails)
 
   const getQuantity = () => {
-    const cartItem = cartItems.find(item => item.dishId === dishId)
+    const cartItem = cart.find(item => item.dishId === dishId)
     return cartItem ? cartItem.quantity : 0
   }
 

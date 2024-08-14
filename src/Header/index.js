@@ -1,8 +1,8 @@
 import './index.css'
 
-const Header = ({cartItems}) => {
+const Header = ({cart}) => {
   const getCartItemsCount = () =>
-    cartItems.reduce((acc, item) => acc + item.quantity, 0)
+    cart.reduce((acc, item) => acc + item.quantity, 0)
 
   const renderCartIcon = () => (
     <div className="cart-icon-container">
